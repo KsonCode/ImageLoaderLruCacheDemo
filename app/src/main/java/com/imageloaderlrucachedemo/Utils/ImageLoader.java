@@ -17,14 +17,16 @@ import java.util.concurrent.Executors;
 public class ImageLoader {
 
     //图片缓存
-    private ImageCache mImageCache = new ImageCache();
+    private ImageCache mImageCache = new MemoryCache();//默认内存缓存
     //线程池，数量为cpu的数量
     private ExecutorService mExcutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-//    private ExecutorService mExcutorService = Executors.newSingleThreadExecutor();
 
     private static ImageLoader mImageLoader = null;
 
-    private ImageLoader() {
+    public ImageCache setImageCache(ImageCache cache) {
+        this.mImageCache = cache;
+
+        return mImageCache;
     }
 
     //单例对象
@@ -44,7 +46,8 @@ public class ImageLoader {
 
     /**
      * 加载图片
-     *git
+     * git
+     *
      * @param url       图片url
      * @param imageView 图片控件
      */
@@ -86,9 +89,11 @@ public class ImageLoader {
         return bitmap;
     }
 
-    public  void cacelThreadExcutors(){
-        if (mExcutorService!=null){
-                mExcutorService.shutdownNow();
-            }
+    public void cacelThreadExcutors() {
+        if (mExcutorService != null) {
+            mExcutorService.shutdownNow();
         }
+    }
+
+
 }

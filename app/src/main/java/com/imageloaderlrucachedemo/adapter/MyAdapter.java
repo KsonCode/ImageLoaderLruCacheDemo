@@ -11,6 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.imageloaderlrucachedemo.R;
+import com.imageloaderlrucachedemo.Utils.DoubleCache;
 import com.imageloaderlrucachedemo.Utils.ImageCache;
 import com.imageloaderlrucachedemo.Utils.ImageLoader;
 
@@ -23,6 +24,7 @@ public class MyAdapter extends ArrayAdapter<String> {
     private GridView mGridView;//Gridview 实例
 
     private ImageLoader mImageLoader;
+    private ImageCache mImageCache;
 
     /**
      * 第一张可见图片的下标
@@ -45,6 +47,7 @@ public class MyAdapter extends ArrayAdapter<String> {
         mGridView = gv;
 
         mImageLoader = ImageLoader.getImageLoader();
+        mImageCache  = mImageLoader.setImageCache(new DoubleCache());//双缓存
     }
 
     @NonNull
@@ -72,8 +75,7 @@ public class MyAdapter extends ArrayAdapter<String> {
      * @param iv
      */
     private void setImageView(String url, ImageView iv) {
-        ImageCache imageCache = new ImageCache();
-        Bitmap bitmap = imageCache.get(url);
+        Bitmap bitmap = mImageCache.get(url);
         if (bitmap != null) {
             iv.setImageBitmap(bitmap);
         } else {
