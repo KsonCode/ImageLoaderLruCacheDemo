@@ -20,6 +20,7 @@ public class ImageLoader {
     private ImageCache mImageCache = new ImageCache();
     //线程池，数量为cpu的数量
     private ExecutorService mExcutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+//    private ExecutorService mExcutorService = Executors.newSingleThreadExecutor();
 
     private static ImageLoader mImageLoader = null;
 
@@ -43,7 +44,7 @@ public class ImageLoader {
 
     /**
      * 加载图片
-     *
+     *git
      * @param url       图片url
      * @param imageView 图片控件
      */
@@ -84,4 +85,10 @@ public class ImageLoader {
 
         return bitmap;
     }
+
+    public  void cacelThreadExcutors(){
+        if (mExcutorService!=null){
+                mExcutorService.shutdownNow();
+            }
+        }
 }
