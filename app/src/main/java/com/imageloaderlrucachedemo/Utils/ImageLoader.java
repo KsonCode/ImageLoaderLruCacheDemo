@@ -18,6 +18,8 @@ public class ImageLoader {
 
     //图片缓存
     private ImageCache mImageCache = new MemoryCache();//默认内存缓存
+    int mLoadingImageId ;//加载中图片
+    int mLoadingFailId;//加载失败图片
     //线程池，数量为cpu的数量
     private ExecutorService mExcutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -59,11 +61,12 @@ public class ImageLoader {
             return;
 
         }
+        imageView.setImageResource(mLoadingImageId);
         imageView.setTag(url);
         mExcutorService.submit(new Runnable() {
             @Override
             public void run() {
-                Bitmap bitmap = downloadImg(url);
+                Bitmap bitmap = downloadImg(url,imageView);
                 if (bitmap == null) {
                     return;
                 }
@@ -75,12 +78,15 @@ public class ImageLoader {
         });
     }
 
-    private Bitmap downloadImg(String imageUrl) {
+    private Bitmap downloadImg(String imageUrl,ImageView imageview) {
         Bitmap bitmap = null;
         try {
             URL url = new URL(imageUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+            if (bitmap==null){
+                imageview.setImageResource(mLoadingFailId);
+            }
             conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,5 +101,13 @@ public class ImageLoader {
         }
     }
 
+
+    public void setLoadingImage(int resId){
+        mLoadingImageId = resId;
+    }
+
+    public void setLoadingFailImage(int resId){
+        mLoadingFailId = resId;
+    }
 
 }
